@@ -31,12 +31,24 @@ function! s:map_grep(helper) abort
 endfunction
 
 function! s:grepargs(args) abort
-  let args = fern#internal#args#split(g:fern#scheme#file#mapping#grep#grepprg)
+  let args = s:split_args(g:fern#scheme#file#mapping#grep#grepprg)
   let args = map(args, { _, v -> v =~# '^[%#]\%(:.*\)\?$' ? fern#util#expand(v) : v })
   let index = index(args, '$*')
   return index is# -1
         \ ? args + a:args
         \ : args[:index - 1] + a:args + args[index + 1:]
+endfunction
+
+function! s:split_args(cmd) abort
+  let sq = '''\zs[^'']\+\ze'''
+  let dq = '"\zs[^"]\+\ze"'
+  let bs = '\%(\\\s\|[^ ''"]\)\+'
+  let pp = printf(
+        \ '\%%(%s\)*\zs\%%(\s\+\|$\)\ze',
+        \ join([sq, dq, bs], '\|')
+        \)
+  let np = '^\%("\zs.*\ze"\|''\zs.*\ze''\|.*\)$'
+  return map(split(a:cmd, pp), { -> matchstr(v:val, np) })
 endfunction
 
 function! s:default_grepprg() abort

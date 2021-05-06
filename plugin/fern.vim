@@ -1,8 +1,13 @@
-if exists('g:loaded_fern') || (!has('nvim') && !has('patch-8.1.0994'))
+if exists('g:loaded_fern')
+  finish
+elseif (!has('nvim') && !has('patch-8.1.0994'))
   " NOTE:
   " At least https://github.com/vim/vim/releases/tag/v8.1.0994 is required
   " thus minimum working version is 8.1.0994. Remember that minimum support
   " version is not equal to this.
+  echohl WarningMsg
+  echo '[fern] Fern does not work on this version of Vim.'
+  echohl None
   finish
 endif
 let g:loaded_fern = 1

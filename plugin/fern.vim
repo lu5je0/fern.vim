@@ -9,6 +9,13 @@ elseif (!has('nvim') && !has('patch-8.1.0994'))
   echo '[fern] Fern does not work on this version of Vim.'
   echohl None
   finish
+elseif exists('+shellslash') && &shellslash
+  " NOTE:
+  " https://github.com/lambdalisue/fern.vim/issues/102
+  echohl WarningMsg
+  echo '[fern] Fern does not work with "shellslash" option.'
+  echohl None
+  finish
 endif
 let g:loaded_fern = 1
 let g:fern_loaded = 1 " Obsolete: For backward compatibility
